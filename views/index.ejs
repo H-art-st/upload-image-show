@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Upload Form</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<style type="text/css">
+		img {
+			width: 200px;
+			height: 200px;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container">
+		<div class="row">
+			<h2>Upload Image File</h2>
+
+			<form method="post" enctype="multipart/form-data" action="/">
+				<div class="form-group row">
+					<div class="col-md-1" style="float: left;">
+						<label for="title" class="col-sm-2 col-form-label justify-items-center">Title</label>
+					</div>
+					<div class="col-sm-3" style="float: left;">
+						<input type="text" name="title" placeholder="title" class="form-control" required>
+					</div>
+				</div>
+				<div class="form-group row">
+					<div class="col-lg-2" style="float: left;">
+						<input type="file" id="file" name="upl" class="form-control-file" onchange="fileValidation(),Filevalidation()"
+							accept="image/*" required>
+					</div>
+				</div>
+				<div class="form-group row">
+					<div class="col-lg-2 " style="float: left;">
+						<input type="submit" class="btn btn-primary">
+					</div>
+				</div>
+			</form>
+		</div>
+</body>
+<script>
+	Filevalidation = () => {
+		const fi = document.getElementById('file');
+		// Check if any file is selected.
+		if (fi.files.length > 0) {
+			for (const i = 0; i <= fi.files.length - 1; i++) {
+
+				const fsize = fi.files.item(i).size;
+				const file = Math.round((fsize / 1024));
+				// The size of the file.
+				if (file >= 4096) {
+					alert(
+						"File too Big, please select a file less than 4mb");
+				} else {
+					res.redirect('/');
+
+				}
+			}
+		}
+	}
+
+</script>
+<script>
+	function fileValidation() {
+		var fileInput = 
+			document.getElementById('file');
+		  
+		var filePath = fileInput.value;
+	  
+		// Allowing file type
+		var allowedExtensions = 
+				/(\.jpg|\.jpeg|\.png|\.gif)$/i;
+		  
+		if (!allowedExtensions.exec(filePath)) {
+			alert('Invalid file type');
+			fileInput.value = '';
+			return false;
+		} 
+		else 
+		{
+		  
+			// Image preview
+			if (fileInput.files && fileInput.files[0]) {
+				var reader = new FileReader();
+				reader.onload = function(e) {
+					document.getElementById(
+						'imagePreview').innerHTML = 
+						'<img src="' + e.target.result
+						+ '"/>';
+				};
+				  
+				reader.readAsDataURL(fileInput.files[0]);
+			}
+		}
+	}
+</script>
+<div class="row">
+	<% for (var i=0; i < data.length; i++) { %>
+		<div class="col-md-3">
+			<div class="thumbnail">
+				<div class="caption">
+					<h3>
+						<%= data[i].Name %>
+					</h3>
+					<img src="<%= data[i].image1 %>" class="img-thumbnail">
+					</br>
+					<form method="post" action="/delete">
+						<input id="prodId" name="prodId" type="hidden" value="<%= data[i]._id %>">
+						<input type="submit" class="pt-4 btn btn-danger" name="Delete" value="Delete">
+					</form>
+				</div>
+			</div>
+		</div>
+		<% } %>
+</div>
+</div>
+
+</html>
